@@ -1,6 +1,7 @@
 package com.hmyh.jetnote.screen
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,6 +57,8 @@ fun NoteScreen(
     var description by remember {
         mutableStateOf("")
     }
+
+    val context = LocalContext.current
 
     Column(
         modifier = modifier.padding(8.dp)
@@ -112,6 +116,17 @@ fun NoteScreen(
                 text = "Save",
                 onClick = {
 
+                    if (title.isNotEmpty() && description.isNotEmpty()){
+                        onAddNote(
+                            Note(
+                            title = title,
+                            description = description))
+
+                        title = ""
+                        description=""
+
+                        Toast.makeText(context,"Note Added", Toast.LENGTH_SHORT).show()
+                    }
                 }
             )
         }
@@ -125,7 +140,7 @@ fun NoteScreen(
                 NoteRow(
                     note = note,
                     onNoteClicked = {
-
+                        onRemoveNote(note)
                     }
                 )
             }
@@ -155,7 +170,7 @@ fun NoteRow(
     ) {
         Column(
             modifier = modifier
-                .clickable(){}
+                .clickable{onNoteClicked(note)}
                 .padding(horizontal = 12.dp, vertical = 4.dp),
             horizontalAlignment = Alignment.Start
         ) {
