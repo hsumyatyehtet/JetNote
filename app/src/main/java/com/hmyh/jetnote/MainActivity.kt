@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -22,7 +23,10 @@ import com.hmyh.jetnote.model.Note
 import com.hmyh.jetnote.screen.NoteScreen
 import com.hmyh.jetnote.screen.NoteViewModel
 import com.hmyh.jetnote.ui.theme.JetNoteTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalComposeApi
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
