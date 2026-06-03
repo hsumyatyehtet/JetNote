@@ -62,10 +62,17 @@ dependencies {
 
     implementation(libs.lifecycle.viewmodel.compose)
 
+    //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
+    //Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+
+    //coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.play.services)
 }
