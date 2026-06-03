@@ -14,12 +14,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ExperimentalComposeApi
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hmyh.jetnote.data.NoteDataSource
 import com.hmyh.jetnote.model.Note
+import com.hmyh.jetnote.screen.NoteDetailScreen
 import com.hmyh.jetnote.screen.NoteScreen
 import com.hmyh.jetnote.screen.NoteViewModel
 import com.hmyh.jetnote.ui.theme.JetNoteTheme
@@ -53,16 +55,22 @@ class MainActivity : ComponentActivity() {
 fun NotesApp(innerPadding: PaddingValues,noteViewModel: NoteViewModel = viewModel() ){
 
     val notesList = noteViewModel.getAllNotes()
+    var selectedNote by remember { mutableStateOf<Note?>(null) }
 
-    NoteScreen(
-        modifier = Modifier.padding(innerPadding),
-        notes = notesList,
-        onAddNote = {
-            noteViewModel.addNote(it)
-        },
-        onRemoveNote = {
-            noteViewModel.removeNote(it)
-        }
-    )
+    if (selectedNote != null) {
+        NoteDetailScreen(
+            modifier = Modifier.padding(innerPadding),
+            note = selectedNote!!,
+            onBackClick = { selectedNote = null }
+        )
+    } else {
+        NoteScreen(
+            modifier = Modifier.padding(innerPadding),
+            notes = notesList,
+            onAddNote = { noteViewModel.addNote(it) },
+            onNoteClick = { selectedNote = it },
+            onRemoveNote = { noteViewModel.removeNote(it) }
+        )
+    }
 
 }

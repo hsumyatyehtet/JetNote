@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -47,6 +50,7 @@ fun NoteScreen(
     modifier: Modifier,
     notes: List<Note>,
     onAddNote: (Note) -> Unit,
+    onNoteClick: (Note) -> Unit,
     onRemoveNote: (Note) -> Unit
 ){
 
@@ -139,9 +143,8 @@ fun NoteScreen(
             items(notes){note->
                 NoteRow(
                     note = note,
-                    onNoteClicked = {
-                        onRemoveNote(note)
-                    }
+                    onNoteClick = onNoteClick,
+                    onRemoveNote = onRemoveNote
                 )
             }
         }
@@ -154,11 +157,11 @@ fun NoteScreen(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NoteRow(
-    modifier: Modifier= Modifier,
+    modifier: Modifier = Modifier,
     note: Note,
-    onNoteClicked: (Note) -> Unit
-){
-
+    onNoteClick: (Note) -> Unit,
+    onRemoveNote: (Note) -> Unit
+) {
     Surface(
         modifier = modifier
             .padding(4.dp)
@@ -168,22 +171,32 @@ fun NoteRow(
         shadowElevation = 4.dp,
         tonalElevation = 2.dp
     ) {
-        Column(
-            modifier = modifier
-                .clickable{onNoteClicked(note)}
-                .padding(horizontal = 12.dp, vertical = 4.dp),
-            horizontalAlignment = Alignment.Start
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = note.title, style = MaterialTheme.typography.titleLarge)
-            Text(text = note.description, style = MaterialTheme.typography.titleMedium)
-            Text(text = note.entryDate
-                .format(DateTimeFormatter.ofPattern("EEE,d MMM")),
-                style = MaterialTheme.typography.bodySmall
-            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onNoteClick(note) }
+                    .padding(horizontal = 12.dp, vertical = 4.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(text = note.title, style = MaterialTheme.typography.titleLarge)
+                Text(text = note.description, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = note.entryDate.format(DateTimeFormatter.ofPattern("EEE,d MMM")),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            IconButton(onClick = { onRemoveNote(note) }) {
+                Icon(
+                    imageVector = Icons.Rounded.Delete,
+                    contentDescription = "Delete note"
+                )
+            }
         }
-
     }
-
 }
 
 
@@ -195,6 +208,7 @@ fun NoteScreenPreview(){
         modifier = Modifier,
         notes = NoteDataSource().loadNotes(),
         onAddNote = {},
+        onNoteClick = {},
         onRemoveNote = {}
     )
 }

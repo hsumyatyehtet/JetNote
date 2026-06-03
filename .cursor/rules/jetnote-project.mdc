@@ -1,0 +1,34 @@
+---
+description: JetNote Android app structure, packages, and architecture
+alwaysApply: true
+---
+
+# JetNote project context
+
+Read **AGENTS.md** at repo root for full layout, stack, and task placement.
+
+## Quick facts
+
+- Single module `:app`, package `com.hmyh.jetnote`, Kotlin + Compose Material 3.
+- **Layers**: `model` (data classes) → `data` (DTOs, sources) → `screen` (ViewModel + UI) → `components` (shared Compose).
+- **Entry**: `NoteApplication` + `MainActivity` → `NotesApp` → `NoteViewModel` → `NoteScreen`.
+- **State today**: in-memory `mutableStateListOf` in `NoteViewModel`; seed from `NoteDataSource` in `data/NoteData.kt`.
+- **Scaffolded not wired**: Hilt (`AppModule` empty, ViewModel not `@HiltViewModel`), Room (deps only, no entities/DAO).
+
+## Where to add code
+
+| Kind | Package / path |
+|------|----------------|
+| Domain model | `model/` |
+| DTO / repository / fake data | `data/` |
+| Screen + ViewModel | `screen/` |
+| Reusable Compose | `components/` |
+| Hilt | `di/` |
+| Theme | `ui/theme/` |
+
+## Conventions
+
+- `Note` and `LocalDateTime` need `@RequiresApi(Build.VERSION_CODES.O)`.
+- `UserData`: nullable `name`, `age`, `nrc` in `data/`.
+- New deps: `gradle/libs.versions.toml` version catalog.
+- Minimal diffs; match existing Compose + ViewModel patterns before introducing Navigation or extra layers.
