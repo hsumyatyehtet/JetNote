@@ -10,25 +10,28 @@ Read **AGENTS.md** at repo root for full layout, stack, and task placement.
 ## Quick facts
 
 - Single module `:app`, package `com.hmyh.jetnote`, Kotlin + Compose Material 3.
-- **Layers**: `model` (data classes) → `data` (DTOs, sources) → `screen` (ViewModel + UI) → `components` (shared Compose).
-- **Entry**: `NoteApplication` + `MainActivity` → `NotesApp` → `NoteViewModel` → `NoteScreen`.
+- **Layers**: `model` (Room `@Entity`) → `data` (DB, DAO, converters, seed data) → `screen` (ViewModel + UI) → `components` (shared Compose).
+- **Entry**: `NoteApplication` + `MainActivity` → `NotesApp` → `NoteViewModel` → `NoteScreen` / `NoteDetailScreen`.
 - **State today**: in-memory `mutableStateListOf` in `NoteViewModel`; seed from `NoteDataSource` in `data/NoteData.kt`.
-- **Scaffolded not wired**: Hilt (`AppModule` empty, ViewModel not `@HiltViewModel`), Room (deps only, no entities/DAO).
+- **Room**: `Note` entity, `NoteDatabase`, `NoteDatabaseDao`, `Converters` (Date↔Long, UUID↔String). Hilt provides DB/DAO via `AppModule`. ViewModel **not wired to DAO yet**.
+- **Navigation**: `selectedNote` state in `NotesApp`; no Navigation-Compose.
 
 ## Where to add code
 
 | Kind | Package / path |
 |------|----------------|
-| Domain model | `model/` |
-| DTO / repository / fake data | `data/` |
+| Room entity | `model/` (`Note.kt`) |
+| DB / DAO / converters | `data/` (`NoteDatabase.kt`, `NoteDatabaseDao.kt`, `Converters.kt`) |
+| Fake / seed data | `data/NoteData.kt` |
 | Screen + ViewModel | `screen/` |
 | Reusable Compose | `components/` |
-| Hilt | `di/` |
+| Hilt | `di/AppModule.kt` |
 | Theme | `ui/theme/` |
 
 ## Conventions
 
-- `Note` and `LocalDateTime` need `@RequiresApi(Build.VERSION_CODES.O)`.
-- `UserData`: nullable `name`, `age`, `nrc` in `data/`.
+- `Note` uses `java.util.Date` + `java.util.UUID`; both need `Converters.kt` registered on `NoteDatabase`.
+- `@RequiresApi(Build.VERSION_CODES.O)` on `Note` and screens using date APIs.
+- New Room non-primitive fields → add `@TypeConverter` pairs in `data/Converters.kt`.
 - New deps: `gradle/libs.versions.toml` version catalog.
-- Minimal diffs; match existing Compose + ViewModel patterns before introducing Navigation or extra layers.
+- Minimal diffs; match existing Compose + ViewModel patterns before adding repositories or Navigation-Compose.

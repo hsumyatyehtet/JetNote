@@ -64,11 +64,11 @@ fun NoteDetailScreen(
                 text = note.title,
                 style = MaterialTheme.typography.headlineMedium
             )
-            Text(
-                text = note.entryDate.format(DateTimeFormatter.ofPattern("EEE, d MMM yyyy · HH:mm")),
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
-            )
+//            Text(
+//                text = note.entryDate.format(DateTimeFormatter.ofPattern("EEE, d MMM yyyy · HH:mm")),
+//                style = MaterialTheme.typography.bodySmall,
+//                modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
+//            )
             Text(
                 text = note.description,
                 style = MaterialTheme.typography.bodyLarge
