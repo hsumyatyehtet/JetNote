@@ -41,6 +41,7 @@ import com.hmyh.jetnote.components.NoteButton
 import com.hmyh.jetnote.components.NoteInputText
 import com.hmyh.jetnote.data.NoteDataSource
 import com.hmyh.jetnote.model.Note
+import com.hmyh.jetnote.util.fromDate
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -139,8 +140,8 @@ fun NoteScreen(
             modifier = Modifier.padding(10.dp)
         )
 
-        LazyColumn() {
-            items(notes){note->
+        LazyColumn {
+            items(notes, key = { it.id }) { note ->
                 NoteRow(
                     note = note,
                     onNoteClick = onNoteClick,
@@ -184,10 +185,10 @@ fun NoteRow(
             ) {
                 Text(text = note.title, style = MaterialTheme.typography.titleLarge)
                 Text(text = note.description, style = MaterialTheme.typography.titleMedium)
-//                Text(
-//                    text = note.entryDate.format(DateTimeFormatter.ofPattern("EEE,d MMM")),
-//                    style = MaterialTheme.typography.bodySmall
-//                )
+                Text(
+                    text = fromDate(note.entryDate.time),
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
             IconButton(onClick = { onRemoveNote(note) }) {
                 Icon(

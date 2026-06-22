@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ExperimentalComposeApi
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,7 +55,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NotesApp(innerPadding: PaddingValues,noteViewModel: NoteViewModel = viewModel() ){
 
-    val notesList = noteViewModel.getAllNotes()
+    val notesList by noteViewModel.noteList.collectAsState()
     var selectedNote by remember { mutableStateOf<Note?>(null) }
 
     if (selectedNote != null) {
@@ -69,7 +70,7 @@ fun NotesApp(innerPadding: PaddingValues,noteViewModel: NoteViewModel = viewMode
             notes = notesList,
             onAddNote = { noteViewModel.addNote(it) },
             onNoteClick = { selectedNote = it },
-            onRemoveNote = { noteViewModel.removeNote(it) }
+            onRemoveNote = { noteViewModel.deleteNote(it) }
         )
     }
 

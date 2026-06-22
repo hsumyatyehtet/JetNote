@@ -1,4 +1,4 @@
-package com.hmyh.jetnote.data
+package com.hmyh.jetnote.util
 
 import androidx.room.TypeConverter
 import java.util.Date
